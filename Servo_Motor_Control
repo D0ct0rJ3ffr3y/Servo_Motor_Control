@@ -1,0 +1,26 @@
+#include "mbed.h"
+#include "Servo.h"
+
+AnalogIn Ain(p20);           //analog input connected to pin 20
+Servo servoMotor(p26);       //servo motor connected to pin 26
+PwmOut buzzer(p21);          //buzzer connected to pin 21
+
+float AinData;   //the value to read from AnalogIn pin
+
+int main() {
+    while(1) {
+        AinData = Ain.read();        //reads the input voltage of Ain and sets it to float variable AinData
+        buzzer.period(0.009);        //period of the buzzer is set to 0.009 seconds
+        while(0.0 < AinData && AinData < 1.0) {      //while range of AinData is between 0.0 and 1.0
+            servoMotor = Ain;                 //set servoMotor equal to Ain, controlling servo motor
+            buzzer = 0.0;                     //set buzzer to value 0.0
+            
+            if(servoMotor.read() == 1.0) {    //if servo motor value is equal to 1.0
+                buzzer = 0.5;                 //set buzzer to 0.5
+            }
+            if(servoMotor.read() < 0.01) {    //if servo motor value is less than 0.01
+               buzzer = 0.5;                  //set buzzer to 0.5
+            }
+        }
+    }
+}
